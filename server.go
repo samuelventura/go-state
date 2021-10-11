@@ -12,6 +12,7 @@ func Serve(node tree.Node) error {
 	mux := node.GetValue("mux").(Mux)
 	path := node.GetValue("path").(string)
 	os.Remove(path)
+	//auto removed on close on macos
 	listen, err := net.Listen("unix", path)
 	if err != nil {
 		node.Close()

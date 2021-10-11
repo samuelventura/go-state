@@ -17,13 +17,19 @@ func main() {
 	ctrlc := make(chan os.Signal, 1)
 	signal.Notify(ctrlc, os.Interrupt)
 
+	path, err := state.Path("/tmp")
+	if err != nil {
+		log.Fatalln(err)
+		return
+	}
+	log.Println("path", path)
 	http := tree.NewRoot("http", nil)
 	mux := state.NewMux()
 	state.AddPProfHandlers(mux)
 	state.AddNodeHandlers(mux, http)
 	state.AddEnvironHandlers(mux)
 	http.SetValue("mux", mux)
-	http.SetValue("path", "/tmp/go-state-to.sock")
+	http.SetValue("path", path)
 	state.Serve(http)
 	defer http.Close()
 
