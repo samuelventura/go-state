@@ -17,11 +17,7 @@ func main() {
 	ctrlc := make(chan os.Signal, 1)
 	signal.Notify(ctrlc, os.Interrupt)
 
-	path, err := state.Path("/tmp")
-	if err != nil {
-		log.Fatalln(err)
-		return
-	}
+	path := state.Path("/tmp")
 	log.Println("path", path)
 	http := tree.NewRoot("http", nil)
 	mux := state.NewMux()
