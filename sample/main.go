@@ -1,8 +1,6 @@
 package main
 
 import (
-	"log"
-
 	"github.com/samuelventura/go-state"
 	"github.com/samuelventura/go-tree"
 )
@@ -10,8 +8,8 @@ import (
 func main() {
 	run(func(root tree.Node) {
 		path := state.SingletonPath("/tmp")
-		log := root.GetValue("log").(*log.Logger)
-		log.Println("path", path)
+		log := root.GetValue("log").(*state.Log)
+		log.Info("path", path)
 		mux := state.NewMux()
 		state.AddPProfHandlers(mux)
 		state.AddNodeHandlers(mux, root)

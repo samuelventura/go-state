@@ -6,6 +6,7 @@ import (
 	"os"
 	"os/signal"
 
+	"github.com/samuelventura/go-state"
 	"github.com/samuelventura/go-tree"
 )
 
@@ -16,15 +17,18 @@ func run(launch func(tree.Node)) {
 	ctrlc := make(chan os.Signal, 1)
 	signal.Notify(ctrlc, os.Interrupt)
 
-	tl := &tree.Log{}
-	tl.Warn = func(args ...interface{}) {
+	slog := &state.Log{}
+	slog.Info = func(args ...interface{}) {
+		log.Println("info", args)
+	}
+	slog.Warn = func(args ...interface{}) {
 		log.Println("warn", args)
 	}
-	tl.Recover = func(ss string, args ...interface{}) {
+	slog.Recover = func(ss string, args ...interface{}) {
 		log.Println("recover", args, ss)
 	}
-	root := tree.NewRoot("root", tl)
-	root.SetValue("log", log.Default())
+	root := tree.NewRoot("root", &slog.Log)
+	root.SetValue("log", slog)
 	defer root.WaitDisposed()
 	defer root.Recover()
 	//async launcher must close root on error
