@@ -18,6 +18,6 @@ func main() {
 		state.AddEnvironHandlers(mux)
 		root.SetValue("mux", mux)
 		root.SetValue("path", path)
-		state.Serve(root)
+		state.Serve(root) //ignore error
 	})
 }

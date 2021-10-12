@@ -9,7 +9,7 @@ import (
 	"github.com/samuelventura/go-tree"
 )
 
-func run(cb func(tree.Node)) {
+func run(launch func(tree.Node)) {
 	log.SetFlags(log.LstdFlags | log.Lmicroseconds)
 	log.SetOutput(os.Stdout)
 
@@ -27,7 +27,9 @@ func run(cb func(tree.Node)) {
 	root.SetValue("log", log.Default())
 	defer root.WaitDisposed()
 	defer root.Recover()
-	go cb(root)
+	//async launcher must close root on error
+	//and cleanup on root closed channel.
+	go launch(root)
 
 	stdin := make(chan interface{})
 	go func() {
