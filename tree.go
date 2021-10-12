@@ -9,36 +9,35 @@ import (
 
 func AddNodeHandlers(mux Mux, node tree.Node) {
 	path := fmt.Sprintf("/node/%s/", node.Name())
-	handle := func(w http.ResponseWriter, s *tree.State, path string) {}
-	handle = func(w http.ResponseWriter, s *tree.State, path string) {
-		fmt.Fprintf(w, "<h1>Node /%s</h1>\n", path)
-		fmt.Fprint(w, "<ul>\n")
-		fmt.Fprintf(w, "<li>Closed %v\n", s.Closed)
-		fmt.Fprintf(w, "<li>Disposed %v\n", s.Disposed)
-		fmt.Fprintf(w, "<li>Actions %d\n", len(s.Actions))
-		fmt.Fprint(w, "<ul>\n")
+	handle := func(w http.ResponseWriter, s *tree.State, values bool, path string) {}
+	handle = func(w http.ResponseWriter, s *tree.State, values bool, path string) {
+		fmt.Fprintf(w, "%s\n", path)
+		fmt.Fprintf(w, "- Closed %v\n", s.Closed)
+		fmt.Fprintf(w, "- Disposed %v\n", s.Disposed)
+		if values {
+			fmt.Fprintf(w, "- Values %d\n", len(s.Values))
+			for n, v := range s.Values {
+				fmt.Fprintf(w, "-- %s=%s\n", n, v)
+			}
+		}
+		fmt.Fprintf(w, "- Actions %d\n", len(s.Actions))
 		for _, n := range s.Actions {
-			fmt.Fprintf(w, "<li>%s\n", n)
+			fmt.Fprintf(w, "-- %s\n", n)
 		}
-		fmt.Fprint(w, "</ul>\n")
-		fmt.Fprintf(w, "<li>Agents %d\n", len(s.Agents))
-		fmt.Fprint(w, "<ul>\n")
+		fmt.Fprintf(w, "- Agents %d\n", len(s.Agents))
 		for _, n := range s.Agents {
-			fmt.Fprintf(w, "<li>%s\n", n)
+			fmt.Fprintf(w, "-- %s\n", n)
 		}
-		fmt.Fprint(w, "</ul>\n")
-		fmt.Fprintf(w, "<li>Children %d\n", len(s.Children))
-		fmt.Fprint(w, "</ul>\n")
+		fmt.Fprintf(w, "- Children %d\n", len(s.Children))
 		for _, n := range s.Children {
 			s = n.State()
-			handle(w, s, path+"/"+s.Name)
+			handle(w, s, values, path+"/"+s.Name)
 		}
 	}
-	mux.AddHandler(path, func(w http.ResponseWriter, r *http.Request) {
+	mux.AddHandler(path, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(200)
-		fmt.Fprint(w, "<html>\n")
+		values := r.URL.Query().Get("values") == "true"
 		s := node.State()
-		handle(w, s, s.Name)
-		fmt.Fprint(w, "</html>\n")
-	})
+		handle(w, s, values, s.Name)
+	}))
 }

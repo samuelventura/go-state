@@ -7,7 +7,7 @@ import (
 
 type Mux interface {
 	ServeHTTP(w http.ResponseWriter, r *http.Request)
-	AddHandler(path string, handler http.HandlerFunc)
+	AddHandler(path string, handler http.Handler)
 }
 
 type mux struct {
@@ -20,7 +20,7 @@ func NewMux() Mux {
 	return mux
 }
 
-func (dso *mux) AddHandler(path string, handler http.HandlerFunc) {
+func (dso *mux) AddHandler(path string, handler http.Handler) {
 	dso.index.Set(path, handler)
 }
 
@@ -39,8 +39,8 @@ func (dso *mux) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			w.WriteHeader(404)
 			fmt.Fprint(w, "NotFound 404")
 		} else {
-			handler := value.(http.HandlerFunc)
-			handler(w, r)
+			handler := value.(http.Handler)
+			handler.ServeHTTP(w, r)
 		}
 	}
 }

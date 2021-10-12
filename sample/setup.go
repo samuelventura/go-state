@@ -6,28 +6,28 @@ import (
 	"os"
 	"os/signal"
 
-	"github.com/samuelventura/go-state"
 	"github.com/samuelventura/go-tree"
 )
 
-func main() {
+func run(cb func(tree.Node)) {
 	log.SetFlags(log.LstdFlags | log.Lmicroseconds)
 	log.SetOutput(os.Stdout)
 
 	ctrlc := make(chan os.Signal, 1)
 	signal.Notify(ctrlc, os.Interrupt)
 
-	path := state.Path("/tmp")
-	log.Println("path", path)
-	http := tree.NewRoot("http", nil)
-	mux := state.NewMux()
-	state.AddPProfHandlers(mux)
-	state.AddNodeHandlers(mux, http)
-	state.AddEnvironHandlers(mux)
-	http.SetValue("mux", mux)
-	http.SetValue("path", path)
-	state.Serve(http)
-	defer http.Close()
+	tl := &tree.Log{}
+	tl.Warn = func(args ...interface{}) {
+		log.Println("warn", args)
+	}
+	tl.Recover = func(ss string, args ...interface{}) {
+		log.Println("recover", args, ss)
+	}
+	root := tree.NewRoot("root", tl)
+	root.SetValue("log", log.Default())
+	defer root.WaitDisposed()
+	defer root.Recover()
+	go cb(root)
 
 	stdin := make(chan interface{})
 	go func() {
@@ -35,7 +35,7 @@ func main() {
 		ioutil.ReadAll(os.Stdin)
 	}()
 	select {
-	case <-http.Closed():
+	case <-root.Closed():
 	case <-ctrlc:
 	case <-stdin:
 	}

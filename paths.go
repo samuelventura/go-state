@@ -6,19 +6,19 @@ import (
 	"path/filepath"
 )
 
-func Path(dir string) string {
-	base := ExeName()
-	file := fmt.Sprintf("%s.sock", base)
+func SingletonPath(dir string) string {
+	name := ExecutableName()
+	file := fmt.Sprintf("%s.state", name)
 	return filepath.Join(dir, file)
 }
 
-func PathWithPid(dir string) string {
-	base := ExeName()
-	file := fmt.Sprintf("%s.%d.sock", base, os.Getpid())
+func InstancePath(dir string, id int) string {
+	name := ExecutableName()
+	file := fmt.Sprintf("%s.%d.state", name, id)
 	return filepath.Join(dir, file)
 }
 
-func ExeName() string {
+func ExecutableName() string {
 	exe, err := os.Executable()
 	if err != nil {
 		return os.Args[0]
