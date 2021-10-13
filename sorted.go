@@ -55,6 +55,9 @@ func (dso *sorted) Names() []string {
 }
 
 func (dso *sorted) Set(name string, value interface{}) {
+	if _, ok := dso.index[name]; ok {
+		panic("duplicated")
+	}
 	item := &named{name, value}
 	dso.index[name] = dso.list.PushBack(item)
 }
