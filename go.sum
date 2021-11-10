@@ -4,10 +4,8 @@ github.com/go-playground/assert/v2 v2.0.1 h1:MsBgLAaY856+nPRTKrp3/OZK38U/wa0CcBY
 github.com/go-playground/assert/v2 v2.0.1/go.mod h1:VDjEfimB/XKnb+ZQfWdccd7VUvScMdVu0Titje2rxJ4=
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
-github.com/samuelventura/go-tree v0.1.0 h1:moT2St4o9632jWCsQkd+BPhqYGnbd/hihUulk2OH5k0=
-github.com/samuelventura/go-tree v0.1.0/go.mod h1:IRxqXlA+huNY8Dd+AX6v2r050IcwmRYnWr7jgbeg87E=
-github.com/samuelventura/go-tree v0.1.1-0.20211110150658-eec927d5559d h1:DWRsW0OII9po6aiCOtqroHrwEKUuCtlbNYp/oA9beuI=
-github.com/samuelventura/go-tree v0.1.1-0.20211110150658-eec927d5559d/go.mod h1:IRxqXlA+huNY8Dd+AX6v2r050IcwmRYnWr7jgbeg87E=
+github.com/samuelventura/go-tree v0.1.1-0.20211110191127-5c4afc90c09b h1:HvQYnSa2Tg0xajoZ9bGdboNBXsniLOXHNmCHfpjLw0c=
+github.com/samuelventura/go-tree v0.1.1-0.20211110191127-5c4afc90c09b/go.mod h1:IRxqXlA+huNY8Dd+AX6v2r050IcwmRYnWr7jgbeg87E=
 github.com/stretchr/objx v0.1.0/go.mod h1:HFkY916IF+rwdDfMAkV7OtwuqBVzrE8GR6GFx+wExME=
 github.com/stretchr/testify v1.7.0 h1:nwc3DEeHmmLAfoZucVR881uASk0Mfjw8xYJ99tb5CcY=
 github.com/stretchr/testify v1.7.0/go.mod h1:6Fq8oRcR53rry900zMqJjRRixrwX3KX962/h/Wwjteg=
