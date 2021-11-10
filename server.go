@@ -1,6 +1,7 @@
 package state
 
 import (
+	"log"
 	"net"
 	"net/http"
 	"os"
@@ -8,29 +9,31 @@ import (
 	"github.com/samuelventura/go-tree"
 )
 
-type Log struct {
-	tree.Log
-	Info func(args ...interface{})
-}
-
-func Serve(node tree.Node) error {
-	mux := node.GetValue("mux").(Mux)
-	path := node.GetValue("path").(string)
-	log := node.GetValue("log").(*Log)
-	os.Remove(path)
+func Serve(root tree.Node, path string) tree.Node {
 	//auto removed on close on macos
+	os.Remove(path) //ignore error
 	listen, err := net.Listen("unix", path)
 	if err != nil {
-		node.Close()
-		return err
+		log.Fatal(err)
 	}
-	node.AddCloser("listen", listen.Close)
-	server := &http.Server{Handler: mux}
-	node.AddProcess("serve", func() {
+
+	slog := tree.NewLog()
+	snode := tree.NewRoot("state", slog)
+	smux := NewMux()
+	AddPProfHandlers(smux)
+	AddEnvironHandlers(smux)
+	AddNodeHandlers(smux, snode)
+	if root != nil {
+		AddNodeHandlers(smux, root)
+	}
+
+	server := &http.Server{Handler: smux}
+	snode.AddCloser("listen", listen.Close)
+	snode.AddProcess("serve", func() {
 		err := server.Serve(listen)
 		if err != nil {
-			log.Warn(err)
+			log.Println(path, err)
 		}
 	})
-	return nil
+	return snode
 }
