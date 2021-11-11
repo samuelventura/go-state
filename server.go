@@ -17,8 +17,7 @@ func Serve(root tree.Node, path string) tree.Node {
 		log.Fatal(err)
 	}
 
-	slog := tree.NewLog()
-	snode := tree.NewRoot("state", slog)
+	snode := tree.NewRoot("state", log.Println)
 	smux := NewMux()
 	AddPProfHandlers(smux)
 	AddEnvironHandlers(smux)

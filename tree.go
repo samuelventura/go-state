@@ -24,8 +24,8 @@ func AddNodeHandlers(mux Mux, node tree.Node) {
 		for _, n := range s.Actions {
 			fmt.Fprintf(w, "-- %s\n", n)
 		}
-		fmt.Fprintf(w, "- Agents %d\n", len(s.Agents))
-		for _, n := range s.Agents {
+		fmt.Fprintf(w, "- Processes %d\n", len(s.Processes))
+		for _, n := range s.Processes {
 			fmt.Fprintf(w, "-- %s\n", n)
 		}
 		fmt.Fprintf(w, "- Children %d\n", len(s.Children))

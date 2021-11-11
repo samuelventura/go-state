@@ -17,8 +17,7 @@ func main() {
 	ctrlc := make(chan os.Signal, 1)
 	signal.Notify(ctrlc, os.Interrupt)
 
-	rlog := tree.NewLog()
-	rnode := tree.NewRoot("root", rlog)
+	rnode := tree.NewRoot("root", log.Println)
 	defer rnode.WaitDisposed()
 	//recover closes as well
 	defer rnode.Recover()
