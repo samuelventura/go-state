@@ -1,10 +1,8 @@
 package main
 
 import (
-	"bufio"
 	"log"
 	"os"
-	"os/signal"
 
 	"github.com/samuelventura/go-state"
 	"github.com/samuelventura/go-tools"
@@ -13,9 +11,8 @@ import (
 
 func main() {
 	tools.SetupLog()
-
-	ctrlc := make(chan os.Signal, 1)
-	signal.Notify(ctrlc, os.Interrupt)
+	ctrlc := tools.SetupCtrlc()
+	stdin := tools.SetupStdinWord("exit")
 
 	rnode := tree.NewRoot("root", log.Println)
 	defer rnode.WaitDisposed()
@@ -35,17 +32,6 @@ func main() {
 	log.Println("socket", spath)
 	log.Println("link", slink)
 
-	stdin := make(chan interface{})
-	go func() {
-		defer close(stdin)
-		//ioutil.ReadAll(os.Stdin)
-		scanner := bufio.NewScanner(os.Stdin)
-		for scanner.Scan() {
-			if scanner.Text() == "exit" {
-				return
-			}
-		}
-	}()
 	select {
 	case <-rnode.Closed():
 	case <-snode.Closed():
