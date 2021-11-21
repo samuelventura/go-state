@@ -1,7 +1,7 @@
 # go-state
 
 ```bash
-(cd sample && go run .)
+(cd ../go-state-sample && go run .)
 curl --unix-socket /tmp/sample.state http://localhost/
 curl --unix-socket /tmp/sample.state http://localhost/environ/
 curl --unix-socket /tmp/sample.state http://localhost/node/state/
