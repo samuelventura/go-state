@@ -7,12 +7,12 @@ import (
 	"os/signal"
 
 	"github.com/samuelventura/go-state"
+	"github.com/samuelventura/go-tools"
 	"github.com/samuelventura/go-tree"
 )
 
 func main() {
-	log.SetFlags(log.LstdFlags | log.Lmicroseconds)
-	log.SetOutput(os.Stdout)
+	tools.SetupLog()
 
 	ctrlc := make(chan os.Signal, 1)
 	signal.Notify(ctrlc, os.Interrupt)
